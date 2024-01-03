@@ -1,17 +1,6 @@
-import json
- 
-# Opening JSON file
-f = open('ontology.json')
- 
-# returns JSON object as 
-# a dictionary
-data = json.load(f)
-
-for i in range(len(data)):
-    print(data[i]["child_ids"])
-
-
-
-
-# Closing file
-f.close()
+import csv
+with open('balanced_train_segments.csv', mode ='r')as file:
+  csvFile = csv.reader(file)
+  for lines in csvFile:
+        print(lines[1])
+        break
