@@ -4,6 +4,8 @@ from pydub import AudioSegment
 
 def cut_audio(input_file, output_file, start_time, end_time):
     audio = AudioSegment.from_file(input_file)
+    print(audio.frame_rate)
+    audio = audio.set_frame_rate(32000)
     cut_audio = audio[start_time:end_time]
     cut_audio.export(output_file, format="mp3")
 
@@ -30,4 +32,5 @@ with open('balanced_train_segments.csv', mode ='r')as file:
         get_audio_clip(video_id,float(start),float(end))
      except:
         continue
+
      
