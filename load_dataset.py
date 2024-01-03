@@ -26,5 +26,8 @@ with open('balanced_train_segments.csv', mode ='r')as file:
      video_id = lines[0]
      start = lines[1]
      end = lines[2]
-     get_audio_clip(video_id,float(start),float(end))
-     break
+     try:
+        get_audio_clip(video_id,float(start),float(end))
+     except:
+        continue
+     
