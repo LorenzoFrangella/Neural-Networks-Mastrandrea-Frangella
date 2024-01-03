@@ -1,17 +1,28 @@
-from  pytube import YouTube
+import torch
+import torchaudio
+import matplotlib.pyplot as plt
 
-import os
+waveform, sample_rate = torchaudio.load("./download/0Bl8dDFsAQU.mp3")
+print("Shape of the audio tensor:", waveform)
 
-video_id = "--4gqARaEJE"
+print("This is the shape of the waveform: {}".format(waveform.size()))
 
-video_url = f"https://www.youtube.com/watch?v={video_id}"
+print("This is the output for Sample rate of the waveform: {}".format(sample_rate))
 
-selected_video = YouTube(video_url)
-audio = selected_video.streams.filter(only_audio = True).first()
+def plot_waveform(waveform, sample_rate):
+    waveform = waveform.numpy()
 
-destination = "./download"
+    num_channels, num_frames = waveform.shape
+    time_axis = torch.arange(0, num_frames) / sample_rate
 
-base , ext = os.path.splitext(destination)
-new_file = base + '.mp3'
-os.rename(destination,new_file)
-print(type(audio))
+    figure, axes = plt.subplots(num_channels, 1)
+    if num_channels == 1:
+        axes = [axes]
+    for c in range(num_channels):
+        axes[c].plot(time_axis, waveform[c], linewidth=1)
+        axes[c].grid(True)
+        if num_channels > 1:
+            axes[c].set_ylabel(f"Channel {c+1}")
+    figure.suptitle("waveform")
+
+plot_waveform(waveform, sample_rate)

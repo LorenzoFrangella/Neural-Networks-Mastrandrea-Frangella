@@ -7,6 +7,7 @@ def cut_audio(input_file, output_file, start_time, end_time):
     print(audio.frame_rate)
     audio = audio.set_frame_rate(32000)
     cut_audio = audio[start_time:end_time]
+    print(cut_audio)
     cut_audio.export(output_file, format="mp3")
 
 
@@ -30,6 +31,7 @@ with open('balanced_train_segments.csv', mode ='r')as file:
      end = lines[2]
      try:
         get_audio_clip(video_id,float(start),float(end))
+        break
      except:
         continue
 
