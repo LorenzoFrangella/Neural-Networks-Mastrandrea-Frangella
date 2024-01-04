@@ -1,9 +1,11 @@
 import torch
 import torchaudio
 import matplotlib.pyplot as plt
-def plot_waveform(waveform, sample_rate):
-    waveform = waveform.numpy()
 
+
+def plot_waveform(waveform, sample_rate):
+    
+    waveform = waveform.numpy()
     num_channels, num_frames = waveform.shape
     time_axis = torch.arange(0, num_frames) / sample_rate
     figure, axes = plt.subplots(num_channels, 1)
@@ -17,7 +19,10 @@ def plot_waveform(waveform, sample_rate):
     figure.suptitle("waveform")
     plt.show()
 
+
+
 def get_mixture_audio(audio1,audio2):
+
     waveform_s1, sample_rate_s1 = torchaudio.load(f"./download/{audio1}.mp3")
     waveform_s2,sample_rate_s2 = torchaudio.load(f"./download/{audio2}.mp3")
 
@@ -28,6 +33,8 @@ def get_mixture_audio(audio1,audio2):
 
     x = waveform_s1 + alpha * waveform_s2
     return x
+
+
 audio = get_mixture_audio("-0DLPzsiXXE","--aaILOrkII")
 input = torch.stft(audio,n_fft=1024,hop_length=512,return_complex=True)
 print(input)
