@@ -16,17 +16,20 @@ def get_audio_clip(video_id, start, end):
     path_dest = audio.download("./download", filename=f"{video_id}.mp3")
 
     cut_audio(path_dest, path_dest, start*1000, end*1000)
+    print(video_id+" downloaded...")
     
 
 
 
 import csv
-with open('balanced_train_segments.csv', mode ='r')as file:
+with open('new_balanced.csv', mode ='r')as file:
   csvFile = csv.reader(file)
   for lines in csvFile:
      video_id = lines[0]
      start = lines[1]
      end = lines[2]
+     text_to_be_embedded = lines[4]
+     text_to_be_embedded = text_to_be_embedded[1:-1]
      try:
         get_audio_clip(video_id,float(start),float(end))
      except:
