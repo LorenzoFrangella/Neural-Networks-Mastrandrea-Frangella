@@ -65,11 +65,11 @@ def get_training_element():
     audio1 = get_audio_clip(audio1_metadata[0],audio1_metadata[1],audio1_metadata[2])
     audio2 = get_audio_clip(audio2_metadata[0],audio2_metadata[1],audio2_metadata[2])
 
+
     
 
-
-
 get_training_element()
+
 
 
 
