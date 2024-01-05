@@ -89,8 +89,6 @@ def get_training_element():
     
     #download the two audio clips, cut them in the defined interval and save
 
-    print(start1,end1)
-    print(start2,end2)
     audio1 = get_audio_clip(audio1_metadata[0],start1,end1)
     audio2 = get_audio_clip(audio2_metadata[0],start2,end2)
 
@@ -127,10 +125,45 @@ def get_training_element():
 
     out = torch.stft(mixed,n_fft=1024,hop_length=320,return_complex=True)
 
+    #return the text to enter into CLAP
+    
+
+    query = audio1_metadata[-1]
+
+    print(query)
+
+    query = query.replace("[","")
+    query = query.replace("]","")
+    query = query.replace(",","")
+    query = query.replace("'","")
+    
+    
+
+    
+
     magnitude_spectrogram = torch.abs(out)
     phase_spectrogram = torch.angle(out)
+
+    query = [query]
+
+    return [magnitude_spectrogram,phase_spectrogram,query]
     
-    
-get_training_element()
+
+
+
+def sure_training_item():
+
+    while True:
+        try:
+            element = get_training_element()
+        except:
+            continue
+        break
+
+    return element
+
+
+
+
 
 
