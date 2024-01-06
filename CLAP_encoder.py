@@ -8,7 +8,7 @@ dataset_path = hf_hub_download(repo_id="lukewys/laion_clap", filename="music_spe
 model.load_ckpt(dataset_path)
 
 
-def get_text_embed( batch):
+def get_text_embed(batch):
         double_batch = False
         if len(batch) == 1:
             batch = batch * 2
@@ -20,6 +20,12 @@ def get_text_embed( batch):
         
         return embed.detach()
 
-text_data = ['pigeons are cooing in the background']
+from load_dataset import sure_training_item
+
+training_triple = sure_training_item()
+
+
+
+text_data = training_triple[-1]
 text_input = get_text_embed(text_data)
 print(text_input)

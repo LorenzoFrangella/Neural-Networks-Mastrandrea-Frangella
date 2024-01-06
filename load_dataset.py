@@ -27,13 +27,27 @@ def get_mixture_audio(audio1,audio2):
     x = waveform_s1 + alpha * waveform_s2
     return x
 
-def get_audio_clip(video_id, start, end):
-    video_url = f"https://www.youtube.com/watch?v={video_id}"
-    selected_video = YouTube(video_url)
-    audio = selected_video.streams.filter(only_audio = True).first()
-    path_dest = audio.download("./download", filename=f"{video_id}.mp3")
+def get_audio_clip(video_id, start, end, download=True):
 
-    cut_audio(path_dest, path_dest, start*1000, end*1000)
+    if download:
+
+        if f"{video_id}.mp3" not in os.listdir("./download"):
+
+            video_url = f"https://www.youtube.com/watch?v={video_id}"
+            selected_video = YouTube(video_url)
+            audio = selected_video.streams.filter(only_audio = True).first()
+            path_dest = audio.download("./download", filename=f"{video_id}.mp3")
+            cut_audio(path_dest, path_dest, start*1000, end*1000)
+
+        path_dest = f"./download/{video_id}.mp3"
+
+    else:
+
+        if f"{video_id}.mp3" not in os.listdir("./download"):
+            return ""    
+        
+        else:
+            path_dest = f"./download/{video_id}.mp3"
 
     return path_dest
     
@@ -127,6 +141,7 @@ def get_training_element():
 
     #return the text to enter into CLAP
     
+    
 
     query = audio1_metadata[-1]
 
@@ -138,7 +153,7 @@ def get_training_element():
     query = query.replace("'","")
     
     
-
+    print(query)
     
 
     magnitude_spectrogram = torch.abs(out)
@@ -161,8 +176,6 @@ def sure_training_item():
         break
 
     return element
-
-
 
 
 
