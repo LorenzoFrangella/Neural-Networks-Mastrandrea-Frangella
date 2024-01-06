@@ -35,9 +35,9 @@ def get_mixture_audio(audio1,audio2):
 
     x = waveform_s1 + alpha * waveform_s2
     return x
-audio1 = AudioSegment.from_file(f'./download/2VMfJymq_lY.mp3')
+audio1 = AudioSegment.from_file(f'./download/5331QhBtfh4.mp3')
 audio1 = audio1.set_frame_rate(32000)
-audio2 = AudioSegment.from_file(f'./download/7JMN4DdhwsM.mp3')
+audio2 = AudioSegment.from_file(f'./download/3204TAJ9USI.mp3')
 audio2 = audio2.set_frame_rate(32000)
 duration1 = audio1.duration_seconds
 duration2 = audio2.duration_seconds
