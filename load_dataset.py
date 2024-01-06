@@ -6,7 +6,30 @@ import random
 import math
 import torch
 import torchaudio
+import numpy as np
 
+def convert_audio_to_tensor(audio):
+
+    raw_audio = audio.raw_data
+
+    # Convert raw audio data to a NumPy array
+    audio_array = np.frombuffer(raw_audio, dtype=np.int16)
+    # Convert NumPy array to a Torch tensor
+    audio_tensor = torch.tensor(audio_array, dtype=torch.float32)
+    audio_tensor = audio_tensor.reshape(2, -1) 
+    audio_tensor /= 32768.0  # Assuming the audio is encoded with 16-bit PCM
+    return audio_tensor
+
+text_dict = {}
+with open('new_balanced.csv', mode ='r')as file:
+        csvFile = csv.reader(file)
+        for lines in csvFile:
+            label = lines[4][1:-1]
+            label = label.replace("[","")
+            label = label.replace("]","")
+            label = label.replace(",","")
+            label = label.replace("'","")
+            text_dict[lines[0]]=[label]
 def cut_audio(input_file, output_file, start_time, end_time):
     audio = AudioSegment.from_file(input_file)
     audio = audio.set_frame_rate(32000)
@@ -14,9 +37,11 @@ def cut_audio(input_file, output_file, start_time, end_time):
     cut_audio.export(output_file, format="mp3")
 
 
+
 def get_mixture_audio(audio1,audio2):
 
     waveform_s1, sample_rate_s1 = torchaudio.load(audio1)
+    print(waveform_s1)
     waveform_s2,sample_rate_s2 = torchaudio.load(audio2)
 
     E1 = torch.square(torch.norm(waveform_s1,p=2))
@@ -153,7 +178,7 @@ def get_training_element():
     query = query.replace("'","")
     
     
-    print(query)
+    #print(query)
     
 
     magnitude_spectrogram = torch.abs(out)
@@ -180,3 +205,59 @@ def sure_training_item():
 
 
 
+def get_input(modality):
+    batch_audio = get_batch()
+    s1 = random.sample(batch_audio,10)
+    s2 = random.sample(batch_audio,10)
+    values = [text_dict[key[:-4]] for key in s1 if key[:-4] in text_dict]
+    mixed = []
+    for i in range(10):
+        audio1 = AudioSegment.from_file(f'./download/{s1[i]}')
+        audio1 = audio1.set_frame_rate(32000)
+        audio2 = AudioSegment.from_file(f'./download/{s2[i]}')
+        audio2 = audio2.set_frame_rate(32000)
+        duration1 = audio1.duration_seconds
+        duration2 = audio2.duration_seconds
+
+        # now we have to sample 5 random seconds from each clip
+
+
+        start_time1 = random.uniform(0,(duration1-5))
+        start_time2 = random.uniform(0,(duration2-5))
+
+        # we cut the two audios in a random sample of 5 second 
+
+        clipped_audio1 = audio1[start_time1*1000:(start_time1+5)*1000]
+        clipped_audio2 = audio2[start_time2*1000:(start_time2+5)*1000]
+        path_clip1 = "./tmp/audio1.mp3"
+        path_clip2 = "./tmp/audio2.mp3"
+        clipped_audio1.export(path_clip1, format="mp3")
+        clipped_audio2.export(path_clip2, format="mp3")
+
+    # we save the two clips and then we combine them
+
+        mixed.append(get_mixture_audio(path_clip1,path_clip2))
+    if modality == 'text':
+        print(mixed,values)
+        return(mixed,values)
+    else:
+        if random.random() > 0.5:
+            return mixed,values
+        else:
+            print(mixed,["./download/"+elem for elem in s1])
+            return mixed,["./download/"+elem for elem in s1]
+    
+    
+
+
+
+def get_random_files(directory, count=20):
+    files = os.listdir(directory)
+    random_files = random.sample(files, count)
+    return random_files
+
+def get_batch():
+    directory_path = './download'
+    random_files = get_random_files(directory_path, 20)
+    return random_files
+get_input('hybrid')

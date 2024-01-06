@@ -35,9 +35,9 @@ def get_mixture_audio(audio1,audio2):
 
     x = waveform_s1 + alpha * waveform_s2
     return x
-audio1 = AudioSegment.from_file(f'./download/-0DLPzsiXXE.mp3')
+audio1 = AudioSegment.from_file(f'./download/2VMfJymq_lY.mp3')
 audio1 = audio1.set_frame_rate(32000)
-audio2 = AudioSegment.from_file(f'./download/--aaILOrkII.mp3')
+audio2 = AudioSegment.from_file(f'./download/7JMN4DdhwsM.mp3')
 audio2 = audio2.set_frame_rate(32000)
 duration1 = audio1.duration_seconds
 duration2 = audio2.duration_seconds
@@ -56,9 +56,13 @@ clipped_audio1.export('./tmp/audio1.mp3', format="mp3")
 clipped_audio2.export('./tmp/audio2.mp3', format="mp3")
 audio = get_mixture_audio("audio1","audio2")
 torchaudio.save("./tmp/audio.mp3",audio,32000)
-out = torch.stft(audio,n_fft=1024,hop_length=512,return_complex=True)
+out = torch.stft(audio,n_fft=1024,hop_length=320,return_complex=True)
 magnitude_spectrogram = torch.abs(out)
 phase_spectrogram = torch.angle(out)
+
+
+print(magnitude_spectrogram.shape,"shape of magn")
+print(phase_spectrogram.shape,"shape of phase")
 
 # Plot the magnitude spectrogram
 plt.figure(figsize=(8, 6))
