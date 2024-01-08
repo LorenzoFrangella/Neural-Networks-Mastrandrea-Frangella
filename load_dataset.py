@@ -9,9 +9,7 @@ import torchaudio
 import numpy as np
 
 def convert_audio_to_tensor(audio):
-
     raw_audio = audio.raw_data
-
     # Convert raw audio data to a NumPy array
     audio_array = np.frombuffer(raw_audio, dtype=np.int16)
     # Convert NumPy array to a Torch tensor
@@ -39,16 +37,12 @@ def cut_audio(input_file, output_file, start_time, end_time):
 
 def get_mixture_audio(audio1,audio2):
 
-    waveform_s1, sample_rate_s1 = torchaudio.load(audio1)
-    print(waveform_s1)
-    waveform_s2,sample_rate_s2 = torchaudio.load(audio2)
-
-    E1 = torch.square(torch.norm(waveform_s1,p=2))
-    E2 = torch.square(torch.norm(waveform_s2,p=2))
+    E1 = torch.square(torch.norm(audio1,p=2))
+    E2 = torch.square(torch.norm(audio2,p=2))
 
     alpha = torch.sqrt(E1/E2)
 
-    x = waveform_s1 + alpha * waveform_s2
+    x = audio1 + alpha * audio2
     return x
 
 def get_audio_clip(video_id, start, end, download=True):
@@ -214,12 +208,14 @@ def sure_training_item():
     return element
 
 
-
-
 def get_input(modality):
-    batch_audio = get_batch()
-    s1 = random.sample(batch_audio,10)
-    s2 = random.sample(batch_audio,10)
+    directory_path = './download'
+    batch_audio =  get_random_files(directory_path, 20)
+
+    s1 = batch_audio[0:10]
+    print(s1)
+    s2 = batch_audio[10:20]
+    print(s2)
     values = [text_dict[key[:-4]] for key in s1 if key[:-4] in text_dict]
     mixed = []
     for i in range(10):
@@ -267,8 +263,70 @@ def get_random_files(directory, count=20):
     random_files = random.sample(files, count)
     return random_files
 
-def get_batch():
-    directory_path = './download'
-    random_files = get_random_files(directory_path, 20)
-    return random_files
-download_all_dataset(0)
+
+
+#download_all_dataset(0)
+
+
+def get_batch(batch_size,dataset_path,labels_file,modality):
+    batch_size=batch_size*2
+    random_samples = get_random_files(dataset_path,batch_size)
+    half = int(batch_size/2)
+    
+    first_subset = random_samples[0:half]
+    second_subset = random_samples[half:batch_size]    
+
+    labels_dict = {}
+
+    with open(labels_file, mode ='r')as file:
+        csvFile = csv.reader(file)
+        for lines in csvFile:
+            label = lines[4][1:-1]
+            label = label.replace("[","")
+            label = label.replace("]","")
+            label = label.replace(",","")
+            label = label.replace("'","")
+            labels_dict[lines[0]]=[label]
+
+    batch = []
+    labels = []
+
+    for i in range(half):
+        audio1,sample_rate1 = torchaudio.load(f"./download/{first_subset[i]}")
+        audio2,sample_rate2 = torchaudio.load(f"./download/{second_subset[i]}")
+
+        # computing starting and ending frame for audio1 
+        start1 = random.randint(0,160000)
+        end1 = start1 + 160000
+        # computing starting and ending frame for audio2
+        start2 = random.randint(0,160000)
+        end2 = start2 + 160000
+
+        audio1 = audio1[:,start1:end1]
+        audio2 = audio2[:,start2:end2]
+
+        mixed = get_mixture_audio(audio1,audio2)
+        
+        batch.append(mixed)
+        labels.append(labels_dict[first_subset[i][:-4]])
+
+    batch = torch.stack(batch,dim=0)
+    
+    if modality=="text":
+        return (batch,labels,False)
+    
+    else:
+        if random.uniform(0,1) > 0.5:
+            labels = ["./download/"+elem for elem in first_subset]
+            return (batch,labels,True)
+        
+    return (batch,labels,False)
+
+
+
+batch,labels,isAudio = get_batch(100,"./download","new_balanced.csv","hybtrune")
+
+print(batch.shape)
+
+
+
