@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from pydub import AudioSegment
 import random
 import numpy as np
-
+from torchlibrosa.stft import STFT, ISTFT, magphase
 def plot_waveform(waveform, sample_rate):
 
     waveform = waveform.numpy()
@@ -56,33 +56,33 @@ clipped_audio1.export('./tmp/audio1.mp3', format="mp3")
 clipped_audio2.export('./tmp/audio2.mp3', format="mp3")
 audio = get_mixture_audio("audio1","audio2")
 torchaudio.save("./tmp/audio.mp3",audio,32000)
-out = torch.stft(audio,n_fft=1024,hop_length=320,return_complex=True)
-print(out.shape)
-inverse = torch.istft(out,n_fft=1024,hop_length=320)
-print(inverse.shape)
-print(audio.shape)
-magnitude_spectrogram = torch.abs(out)
-phase_spectrogram = torch.angle(out)
+audio1,wave = torchaudio.load("./tmp/audio.mp3")
+audios = torch.stack((audio1,audio),dim=0)
+print(audios.shape)
+stft = STFT(n_fft=1024,
+            hop_length=320,
+            win_length=1024,
+            window='hann',
+            center=True,
+            pad_mode='reflect',
+            freeze_parameters=True)
+sp_list = []
+cos_list = []
+sin_list = []
 
+for i in range(audios.shape[1]):
 
-print(magnitude_spectrogram.shape,"shape of magn")
-print(phase_spectrogram.shape,"shape of phase")
+    (real,img) = stft(audios[:,i,:])
+    mag = torch.clamp(real ** 2 + img ** 2, 1e-10, np.inf) ** 0.5
+    cos = real / mag
+    sin = img / mag
+    sp_list.append(real)
+    cos_list.append(cos)
+    sin_list.append(sin)
+mag = torch.cat(sp_list, dim=1)
+coss = torch.cat(cos_list, dim=1)
+sins = torch.cat(sin_list, dim=1)
+#real = real.transpose(0,1)
+x = mag.transpose(1,3)
 
-# Plot the magnitude spectrogram
-plt.figure(figsize=(8, 6))
-plt.imshow(np.log1p(magnitude_spectrogram[0].numpy()), aspect='auto', origin='lower', cmap='viridis')
-plt.title('Magnitude Spectrogram')
-plt.xlabel('Time')
-plt.ylabel('Frequency')
-plt.colorbar(label='Magnitude (log scale)')
-plt.show()
-
-# Plot the phase spectrogram
-plt.figure(figsize=(8, 6))
-plt.imshow(phase_spectrogram[0].numpy(), aspect='auto', origin='lower', cmap='hsv')
-plt.title('Phase Spectrogram')
-plt.xlabel('Time')
-plt.ylabel('Frequency')
-plt.colorbar(label='Phase')
-plt.show()
 

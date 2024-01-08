@@ -78,17 +78,29 @@ def get_audio_clip(video_id, start, end, download=True):
     
 
 
-def download_all_dataset():
-    with open('balanced_train_segments.csv', mode ='r')as file:
-        csvFile = csv.reader(file)
-        for lines in csvFile:
-            video_id = lines[0]
-            start = lines[1]
-            end = lines[2]
-            try:
-                get_audio_clip(video_id,float(start),float(end))
-            except:
-                continue
+def download_all_dataset(cognome):
+    if cognome == 0:
+        with open('mastrandrea.csv', mode ='r')as file:
+            csvFile = csv.reader(file)
+            for lines in csvFile:
+                video_id = lines[0]
+                start = lines[1]
+                end = lines[2]
+                try:
+                    get_audio_clip(video_id,float(start),float(end))
+                except:
+                    continue
+    else:
+        with open('frangella.csv', mode ='r')as file:
+            csvFile = csv.reader(file)
+            for lines in csvFile:
+                video_id = lines[0]
+                start = lines[1]
+                end = lines[2]
+                try:
+                    get_audio_clip(video_id,float(start),float(end))
+                except:
+                    continue
 
 
 
@@ -260,4 +272,4 @@ def get_batch():
     directory_path = './download'
     random_files = get_random_files(directory_path, 20)
     return random_files
-get_input('hybrid')
+download_all_dataset(0)
