@@ -37,7 +37,6 @@ def cut_audio(input_file, output_file, start_time, end_time):
     cut_audio.export(output_file, format="mp3")
 
 
-
 def get_mixture_audio(audio1,audio2):
 
     waveform_s1, sample_rate_s1 = torchaudio.load(audio1)
