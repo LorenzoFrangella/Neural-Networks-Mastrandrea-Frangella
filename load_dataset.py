@@ -8,15 +8,6 @@ import torch
 import torchaudio
 import numpy as np
 
-def convert_audio_to_tensor(audio):
-    raw_audio = audio.raw_data
-    # Convert raw audio data to a NumPy array
-    audio_array = np.frombuffer(raw_audio, dtype=np.int16)
-    # Convert NumPy array to a Torch tensor
-    audio_tensor = torch.tensor(audio_array, dtype=torch.float32)
-    audio_tensor = audio_tensor.reshape(2, -1) 
-    audio_tensor /= 32768.0  # Assuming the audio is encoded with 16-bit PCM
-    return audio_tensor
 
 text_dict = {}
 with open('new_balanced.csv', mode ='r')as file:
