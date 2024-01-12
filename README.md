@@ -15,14 +15,14 @@ For the former we used the text-encoder and audio-encoder of [CLAP](https://gith
 #### SeparationNet
 ---
 
-The separationNet takes as input the audio to process and the output of CLAP. At the beginning the audio is preprocessed with a **Short time fourier transform** in order to extract **the magnitude and the phase** of the waveform.
+The separationNet takes as input the audio to process and the output of CLAP. At the beginning the audio is preprocessed with a **Short time fourier transform (STFT)** in order to extract **the magnitude and the phase** of the waveform.
 At this point the magnitude spectrogram goes through the following ResUnet(encoder-decoder architecture).
 
 
 ![image](./resunet.png)
 
 This network is composed by **7 encoder blocks and 6 decoder blocks**.
-Every **encoder block** contains **2 batch normalization layers, 2 CNN layers and 2 Leaky** Relu layers and if the number of channels in input is different from the ones in output there is another convolution on the initial input that is summed with the previous result giving raise to a **Residual block**.
+Every **encoder block** contains **2 batch normalization layers, 2 CNN layers and 2 Leaky Relu** layers and if the number of channels in input is different from the ones in output there is another convolution on the initial input that is summed with the previous result giving raise to a **Residual block**.
 A further **average pool layer** is applied to this final value.
 
 ![image](./encoder(1).png)
