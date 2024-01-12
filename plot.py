@@ -27,4 +27,4 @@ def plot_signal(path,video_id):
     #plt.savefig(f"./waveform_plots/{video_id}")
     plt.show()
 
-plot_signal("./download","V65IPXejqj4")
+plot_signal(".","res(12)")
