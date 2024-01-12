@@ -15,7 +15,7 @@ For the former we used the text-encoder and audio-encoder of [CLAP](https://gith
 #### SeparationNet
 ---
 
-The separationNet takes as input the audio to process and the output of CLAP. At the beginning the audio is preprocessed with a Short time fourier transform in order to extract the magnitude and the phase of the waveform.
+The separationNet takes as input the audio to process and the output of CLAP. At the beginning the audio is preprocessed with a **Short time fourier transform** in order to extract **the magnitude and the phase** of the waveform.
 At this point the magnitude spectrogram goes through the following ResUnet(encoder-decoder architecture).
 
 
