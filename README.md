@@ -3,7 +3,7 @@ This repository contains an implementation of the official paper [Separate anyth
 
 #### Description
 ___
-The task of this project is known as Language Query Audio Separation (LASS) in which given an audio mixture, the scope is to separate a specific sound related to a text query (in natural language).
+The task of this project is known as **Language Query Audio Separation (LASS)** in which given an audio mixture, the scope is to separate a specific sound related to a text query (in natural language).
 
 #### The Architecture
 ---
@@ -36,11 +36,29 @@ In order to correlate the QueryNet and the SeparationNet, to each feature map of
 
 The outputs of the whole SeparationNet are **a magnitude mask and a phase mask** that depend on the text embedding of the QueryNet. 
 
-These masks have to be applied to the orignal inputs in order to recover the **separated complex spectogram**. At the end we can perform the inverse Short time Fourier transform for obtaining the desired waveform.
+These masks have to be applied to the orignal inputs in order to recover the **separated complex spectogram**. At the end we can perform the inverse Short time Fourier transform to obtain the desired waveform.
+
+#### Training and loss
+
+For training we downloaded a subset of audios in the balanced training dataset of [AudioSet](http://research.google.com/audioset/). In order to build a sample used in the training we get two random samples from this dataset, we combine these two audios as done in the original paper.
+
+Then from this mixture we extract a 5 seconds random sample, and taking as labels the labels of the first audio, we pass them as input of the network.
+
+
+#### Testing
+
+For testing we used another dataset from AudioSet, called Evaluation Data, in which there are samples that are not in the training dataset.
+During testing phase, a given number of classes of audio are randomly chosen and for each of it, we take other 5 random classes that have to be mixed with the initial ones. To evaluate the result, we return the loss of each experiment, and we plot the spectrograms in order to have a look to the result.
+
+#### Requirements
+
+The required packets to run this project are in the file [requirements.txt](https://github.com/LorenzoFrangella/Neural-Networks-Mastrandrea-Frangella/blob/main/requirements.txt)
+and run:
+```pip3 install -r requirements.txt```
+
+
+#### Installation
+
+To run this project is necessary to open the file project_nn.ipynb which is a jupiter notebook and run one by one the cells. 
+
  
- 
- 
-
-
-
-
