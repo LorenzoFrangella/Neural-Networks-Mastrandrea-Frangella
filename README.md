@@ -38,11 +38,14 @@ The outputs of the whole SeparationNet are **a magnitude mask and a phase mask**
 
 These masks have to be applied to the orignal inputs in order to recover the **separated complex spectogram**. At the end we can perform the inverse Short time Fourier transform to obtain the desired waveform.
 
+Our implementation is made by three models, the first one big as the one proposed in the audioSep paper, one with the same number of encoder and decoders but has a lower number of channels (like in the gitHub implementation of the paper) and the last one which is the smallest composed by 4 encoder and 4 decoder blocks in the resUnet.
+
 #### Training and loss
 ---
 For training we downloaded a subset of audios in the balanced training dataset of [AudioSet](http://research.google.com/audioset/). In order to build a sample used in the training we get two random samples from this dataset, we combine these two audios as done in the original paper.
 
 Then from this mixture we extract a 5 seconds random sample, and taking as labels the labels of the first audio, we pass them as input of the network.
+
 
 
 #### Testing
@@ -65,4 +68,6 @@ To run this project is necessary to open the file project_nn.ipynb which is a ju
 
 #### References 
 ---
+
+
 
