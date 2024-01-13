@@ -46,6 +46,7 @@ For training we downloaded a subset of audios in the balanced training dataset o
 
 Then from this mixture we extract a 5 seconds random sample, and taking as labels the labels of the first audio, we pass them as input of the network.
 
+We decided to train both the middle size and the smaller size networks. As outcome we have a better performance on the mid sized network with 6 encoders and 6 decoders, in the average the models that we have trained in some cases is able to reduce a bit some sounds but it also makes some errors like reducing completely the audio of a clip. In the jupiter notebook project_nn.ipynb we can see that there is some similarities between the target spectrogram and the network output. Our conjecture is that the training on a small batch of audios leads to a weaker result, given also by the fact that we have to reduce a lot the learning rate since the model was frequently get stuck in a local minima in which it returns as output an empty audio.
 
 
 #### Testing
