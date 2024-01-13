@@ -3,7 +3,7 @@ This repository contains an implementation of the official paper [Separate anyth
 
 #### Description
 ___
-The task of this project is known as Language Query Audio Separation (LASS) in which given an audio mixture, the scope is to separate a specific sound related to a text query (in natural language).
+The task of this project is known as **Language Query Audio Separation (LASS)** in which given an audio mixture, the scope is to separate a specific sound related to a text query (in natural language).
 
 #### The Architecture
 ---
