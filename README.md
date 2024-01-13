@@ -66,8 +66,27 @@ and run:
 To run this project is necessary to open the file project_nn.ipynb which is a jupiter notebook and run one by one the cells. 
 
 
+
 #### References 
 ---
 
 
 
+
+### References
+
+1. [LASS](https://liuxubo717.github.io/LASS-demopage/)
+
+2. [CLAP](https://github.com/LAION-AI/CLAP)
+
+3. [AudioSep](https://github.com/Audio-AGI/AudioSep)
+
+4. [here](https://learnpython.com/blog/plot-waveform-in-python/) we have taken the code for plotting
+
+5. [Pytube](https://github.com/pytube/pytube)
+
+6. [Pydub](https://github.com/jiaaro/pydub)
+
+7. [Here](https://github.com/qiuqiangkong/torchlibrosa/blob/master/torchlibrosa/stft.py) we have taken the functions for Fourier transformations.
+
+ 
